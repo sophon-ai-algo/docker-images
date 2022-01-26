@@ -1,7 +1,7 @@
 [English](./README.md) | [中文](README_ZH.md)
 ## Building the conversion docker image
 ### Introduction
-The conversion docker image's  `Dockerfile` corresponds to `. /docker-images/Dockerfile/convert/ubuntu1604/Dockerfile.*`.
+The conversion docker image's  `Dockerfile` corresponds to `docker-images/Dockerfile/convert/ubuntu1604/Dockerfile.*`.
 
 There are currently two `Dockerfile` based on `ubuntu1604`, the differences of which are described later.
 
@@ -14,13 +14,13 @@ There are currently two `Dockerfile` based on `ubuntu1604`, the differences of w
 - `Dockerfile.all` contains `Python3.5 3.6 3.7 3.8 Python2.7`, where `Python3` is managed using `update-alternatives` and `Python3.6 3.7 3.8` requires installing `pip` manually .
   > Use `update-alternatives --config python3` to switch between versions \
   > After successful switch, use `curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py` to install `pip`
-- `Dockerfile.select` contains `Python2.7 Python3.7 Python3.5` by default, where `Python3.7` can be replaced by `Python3.6 Python3.8` at the build stage of the image, and the user **does not need** to install ` pip`.
+- `Dockerfile.select` contains `Python2.7 Python3.7 Python3.5` by default, where `Python3.7` can be replaced by `Python3.6 Python3.8` at the build stage of the image, and the user **does not need** to install `pip`.
 
 ### Building images
 - If you choose `Dockerfile.select` to build the image, you need to specify the `Python3` version with the `PYTHON_VERSION` parameter, otherwise `Python3.7` will be installed by default.
   > `docker build -t bmnnsdk2-bm1684/dev:ubuntu1604 -f Dockerfile.select --build-arg PYTHON_VERSION=3.x` \
   > `3.x` can be replaced with `3.6 3.7 3.8`
-- If the user chooses `Dockerfile.all` for image build
+- If the user chooses `Dockerfile.all` for image building
   > `docker build -t bmnnsdk2-bm1684/dev:ubuntu1604 -f Dockerfile.all` \
   > Note that using this `Dockerfile` will **multiple times** compile the `Python` source code, so please be patient.
 ### Use
@@ -28,10 +28,10 @@ Please use it with the `SDK`, see the tutorial on the official website for detai
 
 ## Building the deployment image
 ### Introduction
-The deployment image's `Dockerfile` corresponds to `. /docker-images/Dockerfile/deploy/x86/ubuntu1604/Dockerfile/*`.
+The deployment image's `Dockerfile` corresponds to `docker-images/Dockerfile/deploy/x86/ubuntu1604/Dockerfile/*`.
 ### Preparation
 - Install `Docker`
-  > The following `Dockerfile` can be `build` successfully on `Docker` version `20.10.7`
+  > The following `Dockerfile` can be built successfully on `Docker` version `20.10.7`
 - High-quality network
 
 ### `Dockerfile` description
