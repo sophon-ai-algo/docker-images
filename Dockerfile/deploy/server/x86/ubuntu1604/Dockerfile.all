@@ -1,0 +1,90 @@
+FROM ubuntu:16.04
+    
+RUN apt-get update --fix-missing && \
+      # basic utils
+      apt-get install -y \
+        cmake \
+        libtool \
+        wget \
+        git \
+        vim \
+        tree \
+        curl  \
+        bc \
+
+      # python2.7 & some libs
+      python-dev  \
+      python-paramiko python-cffi python-numpy python-scipy \
+      libgfortran3 libopenblas-dev \
+      libleveldb-dev  \
+
+      # for build python3.x
+      libssl-dev liblmdb-dev dialog \
+      pkg-config libopencv-dev libncurses5-dev \
+      libgflags-dev libhdf5-10 libhdf5-serial-dev libhdf5-dev \
+      libsnappy-dev libatlas-base-dev graphviz libxpm-dev libxext-dev \
+      zlib1g-dev libbz2-dev libsqlite3-dev \
+      libreadline-dev tk-dev libgdbm-dev libdb-dev libpcap-dev xz-utils libexpat1-dev \
+      liblzma-dev libffi-dev libc6-dev && \
+
+      # python3.5 
+      apt-get install -y python3-dev && \
+      curl https://bootstrap.pypa.io/pip/3.5/get-pip.py -o get-pip.py && \
+      curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip2.py && \
+      python3 get-pip.py && \
+      python get-pip2.py && \
+
+      # python3.6
+      wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz && \
+      tar -xvf Python-3.6.3.tgz && \
+      cd Python-3.6.3 && \
+      ./configure --enable-loadable-sqlite-extensions && \
+      make && \
+      make altinstall && \
+      cd / && \
+      
+      # python3.7
+      wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz && \
+      tar -xvf Python-3.7.3.tgz && \
+      cd Python-3.7.3 && \
+      ./configure --enable-loadable-sqlite-extensions && \
+      make && \
+      make altinstall && \
+      cd / && \
+
+      # python3.8
+      wget https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz && \
+      tar -xvf Python-3.8.3.tgz && \
+      cd Python-3.8.3 && \
+      ./configure --enable-loadable-sqlite-extensions && \
+      make && \
+      make altinstall && \
+
+      # set update-alternatives
+      update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1 && \
+      update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.6 2 && \
+      update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 3 && \
+      update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.7 4 && \
+
+      # build opencv
+      git clone -b 4.1.0 --depth=1 https://github.com/opencv/opencv.git && \
+      cd opencv && \
+      mkdir build && \
+      cd build && \
+      cmake -DWITH_LIBV4L=ON .. && \
+      make -j$(nproc) && \
+      make install && \
+      cd ../../ && rm -rf opencv && \
+
+      ldconfig && \
+      ldconfig /usr/local/lib && \
+
+      # clean
+      apt-get clean && \
+      apt-get autoclean && \
+      rm -rf /var/lib/apt/lists/* && \
+      cd / && rm -rf Python-3.6.3 && rm Python-3.6.3.tgz && rm get-pip.py && rm get-pip2.py && \
+      rm -rf Python-3.7.3 && rm Python-3.7.3.tgz && rm -rf Python-3.8.3 && rm Python-3.8.3.tgz
+
+WORKDIR /workspace
+
